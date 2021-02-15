@@ -1,12 +1,14 @@
 const express = require('express');
 const users = express.Router();
 bodyParser = require('body-parser').json();
+// users.use(express.static('public'));
 
 const userArray = [
-    {id: 0, fName: "John", lName: "Doe", email: "JDoe@email.com", password: "1234"},
-    {id: 1, fName: "Remi", lName: "Green", email: "Rg", password: "1234", pic: "/assets/remi.jpg", },
-    {id: 2, fName: "Jack", lName: "Smith", email: "JSmith@email.com", password: "1234"},
-    {id: 3, fName: "Jane", lName: "Jay", email: "JJay@email.com", password: "1234"},
+    {id: 0, fName: "John", lName: "Doe", email: "JDoe@email.com", password: "1234", pic: "Default.png", followers: 10, following: 80},
+    {id: 1, fName: "Remi", lName: "Greenbauer", email: "Rgreen@email.com", password: "1234", pic: "Remi.jpg", followers: 6, following: 25},
+    {id: 2, fName: "Jack", lName: "Smith", email: "JSmith@email.com", password: "1234", pic: "Default.png", followers: 5, following: 2},
+    {id: 3, fName: "Jane", lName: "Jay", email: "JJay@email.com", password: "1234", pic: "Default.png", followers: 4, following: 16},
+    {id: 4, fName: "Boris", lName: "Crowther", email: "BCrowther@email.com", password: "1234", pic: "Default.png", followers: 7, following: 28},
 ]
 
 users.get('/', (req, res) => {
@@ -19,10 +21,14 @@ users.get('/:id', (req, res) => {
     if(!user){
         res.status(404).send("The user with the given ID was not found.");
     } else { 
-        res.sendFile(user.pic);
         res.send(user);
     }
 })
+
+
+users.get(`/images/`, function (req, res) {
+ 
+});
 
 users.post('/', bodyParser, (req, res) => {
     if (!req.body.fName || !req.body.lName || !req.body.email){
@@ -30,11 +36,14 @@ users.post('/', bodyParser, (req, res) => {
         return;
     }
     const user = {
-        id: userArray.length + 1,
+        id: userArray.length,
         fName: req.body.fName,
         lName: req.body.lName,
         email: req.body.email,
         password: req.body.password,
+        pic: "Default.png",
+        followers: 0,
+        following: 0,
     };
     userArray.push(user);
     res.set('content-type', 'text/plain');
